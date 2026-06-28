@@ -10,6 +10,8 @@
 
 Open, public, and experimental home-management architecture for a community-driven homelab stack.
 
+This organization publishes practical smart-home tools and services built from the author's homelab experience. These are real projects, in use now, and they are organized to be public, inspectable, and iteratable.
+
 ## Why It Exists
 
 Most home automation systems are built around individual products, vendor-specific integrations, or brittle glue between tools. That works for a narrow setup, but it breaks down when the environment grows across security, climate, media, comfort, monitoring, and experimentation.
@@ -104,6 +106,14 @@ Key public-facing repos include:
 - [`hms-nut`](https://github.com/hms-homelab/hms-nut) — UPS monitoring and alerts
 - [`hms-firetv`](https://github.com/hms-homelab/hms-firetv) — Fire TV automation service
 - [`hms-tuya`](https://github.com/hms-homelab/hms-tuya) — Tuya WiFi bridge with HA auto-discovery
+
+### Most Starred Public Repos
+
+Current public standouts include:
+
+- [`hms-cpap`](https://github.com/hms-homelab/hms-cpap) — 62 stars
+- [`hms-assist-api`](https://github.com/hms-homelab/hms-assist-api) — 10 stars
+- [`hms-firetv`](https://github.com/hms-homelab/hms-firetv) — 2 stars
 
 ## Public Docs
 
