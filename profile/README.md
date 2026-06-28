@@ -1,98 +1,134 @@
 # HMS Homelab
 
 [![Homepage](https://img.shields.io/badge/Home%20Page-shmaestro.com-blue?logo=internet-explorer)](https://shmaestro.com)
-[![Architecture](https://img.shields.io/badge/Architecture-HMS--4C-blue)]()
-[![Protocol](https://img.shields.io/badge/Protocol-HMSP%20(draft)-orange)](https://github.com/hms-homelab/hmsp-protocol)
+[![Status](https://img.shields.io/badge/Status-Experimental-orange)]()
+[![HMS-4C](https://img.shields.io/badge/Framework-HMS--4C-blue)]()
+[![HMSP](https://img.shields.io/badge/Protocol-HMSP-teal)]()
+[![HMS-OSA](https://img.shields.io/badge/Spec-HMS--OSA-slateblue)]()
 
-Local-first home management systems and services for a resilient residential automation stack.
+![HMS Homelab banner](assets/hms-homelab-banner.png)
 
-## What This Org Is For
+Open, public, and experimental home-management architecture for a community-driven homelab stack.
 
-`hms-homelab` groups the software and firmware behind a multi-domain home platform:
-- Home Assistant integrations and automations
-- n8n workflows and orchestration
-- Local AI and voice services
-- Device monitoring and health reporting
-- Embedded firmware and edge controllers
-- Shared libraries and reusable code
+## Why It Exists
 
-Most services are C++ (Drogon) microservices or ESP32 firmware that integrate with
-Home Assistant over MQTT and REST. They are split by domain so each subsystem can
-evolve independently while sharing common patterns.
+Most home automation systems are built around individual products, vendor-specific integrations, or brittle glue between tools. That works for a narrow setup, but it breaks down when the environment grows across security, climate, media, comfort, monitoring, and experimentation.
 
-## Architecture — HMS-4C
+HMS exists to define a more durable model:
 
-The stack follows the **HMS-4C** framework: four operational layers, so concerns stay
-separated and the system degrades cleanly instead of failing as a monolith.
+- interactions should be understandable, not ad hoc
+- device behavior should be shaped by context and constraints
+- integrations should be open enough for multiple implementations
+- the protocol layer should be separable from the architecture itself
 
-- **Field** — sensors, actuators, firmware, cameras, UPS, weather station
-- **Automation** — Home Assistant, n8n, data collectors, protocol bridges
-- **Management** — dashboards, operator tools, manual control
-- **Intelligence** — analytics, ML inference, optimization
+The goal is not a single product. The goal is an open architecture that can survive changing devices, changing software, and changing requirements without losing coherence.
 
-## Protocol — HMSP (draft)
+## Goal
 
-Today these services integrate over **MQTT + Home Assistant auto-discovery**. The
-planned successor is **[HMSP](https://github.com/hms-homelab/hmsp-protocol)** — a
-zero-config protocol that drops the broker in favor of:
+The long-term goal of HMS is a smart home that can:
 
-- mDNS discovery (`_hmsp._tcp.local`)
-- a REST metadata endpoint (`GET /api/hmsp/info`)
-- a WebSocket carrying Protobuf messages, with sequence numbers, command
-  acknowledgements, and explicit availability
+- stay self-sufficient without relying on brittle cloud glue
+- diagnose itself when something changes or fails
+- adapt to new devices, rooms, routines, and constraints
+- predict issues before they become outages or annoyances
+- prevent avoidable problems through local intelligence and clear architecture
 
-> **Status:** HMSP is a `v1.0.0-draft` design with a reference C++ library, Python SDK,
-> ESP-IDF component, and HA integration — **not yet production-deployed.** The current
-> production transport is still MQTT.
+That is why the intelligence layer sits above the operational layers: it is there to observe, infer, anticipate, and help the system improve over time rather than only react after the fact.
+
+## Model
+
+`HMS-4C` is the governing design frame. `HMS-OSA` is the formal open architecture definition. `HMSP` is the protocol implementation path that realizes that definition.
+
+## 4C Pillars
+
+The 4C pillars shape interactions across devices and services:
+
+| Pillar | Meaning |
+| --- | --- |
+| Components | The replaceable parts in the system. A component can be a device, service, model, workflow, or operator-facing tool. The point is modularity: pieces can evolve without forcing the whole system to be rewritten. |
+| Connectors | The interactions and links between parts. This includes the message paths, APIs, transports, and discovery mechanisms that let components cooperate without becoming tightly coupled. |
+| Constraints | The limits that shape acceptable behavior. Constraints cover latency, power, bandwidth, availability, trust boundaries, and any other rule that keeps the system reliable and understandable. |
+| Context | The domain-specific meaning behind each interaction. A temperature reading, motion event, or command only matters when the system knows what domain it belongs to and what should happen next. |
+
+These pillars are the design discipline for HMS-OSA. They are the lens through which devices, services, and operators should interact.
+
+## HMS-OSA
+
+HMS-OSA is the public architecture definition. It describes how the 4C pillars should be implemented so any participating device or service can be discovered, understood, and integrated consistently.
+
+The spec is intentionally public and living:
+
+- [OSA spec document](docs/HMS-OSA.md)
+- [Public HMS docs index](docs/README.md)
+
+## HMSP
+
+HMSP is the protocol implementation layer. It exists to make HMS-OSA practical: discovery, metadata exchange, state transport, command handling, and availability tracking.
+
+The implementation is still experimental, but the public direction is stable:
+
+- a device or service should be able to announce itself cleanly
+- the system should know what it is, what it can do, and whether it is available
+- state and control should flow through a defined contract instead of one-off glue
+- future community implementations should be able to follow the same model
+
+## Public Shape
+
+This project is public by design, but it is still experimental.
+
+- architecture first
+- protocol second
+- implementation third
+- no private network details in public docs
+
+The README explains the model at a high level. The docs directory holds the living spec and redaction notes for ongoing iteration.
+
+## Architecture
+
+![HMS-4C architecture draft](assets/hms-4c-architecture-v4.png)
+
+The public model is vendor-neutral:
+
+- any device or service can participate if it implements the architecture
+- named platforms are not part of the core diagram
+- external integrations are treated as abstract endpoints, not primary dependencies
+- the protocol work stays open and implementation-focused
 
 ## Repositories
 
-**CPAP / Sleep**
-- [`hms-cpap`](https://github.com/hms-homelab/hms-cpap) — ResMed CPAP data collection for Home Assistant
-- [`hms-cpapdash-parser`](https://github.com/hms-homelab/hms-cpapdash-parser) — shared C++ CPAP parser (ResMed + Lowenstein)
-- [`hms-cpapdash-charts`](https://github.com/hms-homelab/hms-cpapdash-charts) — shared Angular chart components
-- [`hms-cpap-arduino`](https://github.com/hms-homelab/hms-cpap-arduino) — ESP8285 CPAP data bridge (FYSETC SD-WiFi v2.1)
-- [`hms-fysetc`](https://github.com/hms-homelab/hms-fysetc) — HTTP file server firmware for FYSETC SD WiFi Pro
-- [`hms-mm`](https://github.com/hms-homelab/hms-mm) — dual ESP32-C3 miner/mule WiFi SD card bridge
+Key public-facing repos include:
 
-**Voice / Assist**
-- [`hms-assist-api`](https://github.com/hms-homelab/hms-assist-api) — backend voice and intent service (3-tier classification)
-
-**Monitoring / Power**
+- [`hmsp-protocol`](https://github.com/hms-homelab/hmsp-protocol) — HMSP spec, C++ library, SDKs, and draft implementation work
+- [`hms-shared`](https://github.com/hms-homelab/hms-shared) — shared libraries and reusable code
+- [`hms-cpap`](https://github.com/hms-homelab/hms-cpap) — CPAP data collection and Home Assistant integration
 - [`hms-nut`](https://github.com/hms-homelab/hms-nut) — UPS monitoring and alerts
-- [`hms-esp-apc`](https://github.com/hms-homelab/hms-esp-apc) — ESP32-S3 USB Host to MQTT bridge for APC UPS
+- [`hms-firetv`](https://github.com/hms-homelab/hms-firetv) — Fire TV automation service
+- [`hms-tuya`](https://github.com/hms-homelab/hms-tuya) — Tuya WiFi bridge with HA auto-discovery
 
-**Cameras / Vision**
-- [`hms-nvr`](https://github.com/hms-homelab/hms-nvr) — Amcrest camera event stream monitor
-- [`hms-detection`](https://github.com/hms-homelab/hms-detection) — RTSP capture and YOLO object detection
-- [`hms-timeline`](https://github.com/hms-homelab/hms-timeline) — YOLO detection timeline viewer
+## Public Docs
 
-**Media / Automation**
-- [`hms-firetv`](https://github.com/hms-homelab/hms-firetv) — Fire TV Lightning Protocol service
+- [HMS-4C framework](docs/HMS-4C.md)
+- [HMSP protocol](docs/HMSP.md)
+- [HMS-OSA specification](docs/HMS-OSA.md)
+- [Redaction note](docs/REDACTION.md)
 
-**Devices / Bridges**
-- [`hms-tuya`](https://github.com/hms-homelab/hms-tuya) — Tuya WiFi MQTT bridge with HA auto-discovery
-- [`nanotuya`](https://github.com/hms-homelab/nanotuya) — C++ library for the Tuya WiFi local protocol
-- [`hms-esp-tuya-ble`](https://github.com/hms-homelab/hms-esp-tuya-ble) — ESP32-C3 BLE to MQTT bridge for Tuya breakers
-- [`hms-scale`](https://github.com/hms-homelab/hms-scale) — smart scale service with ML user identification
-- [`hms-scale-esp`](https://github.com/hms-homelab/hms-scale-esp) — ESP32-C3 BLE gateway for Etekcity scale
-- [`nordictrack_t5`](https://github.com/hms-homelab/nordictrack_t5) — ESP32-S3 bridge for NordicTrack/iFit treadmills
+## What This Org Publishes
 
-**Baby**
-- [`hms-baby-tracker`](https://github.com/hms-homelab/hms-baby-tracker) — newborn care tracking for Home Assistant
-
-**Protocol / Shared**
-- [`hmsp-protocol`](https://github.com/hms-homelab/hmsp-protocol) — HMSP spec, C++ lib, SDKs (draft)
-- [`hms-shared`](https://github.com/hms-homelab/hms-shared) — common libraries and reusable code
-- [`hms-claude-mem`](https://github.com/hms-homelab/hms-claude-mem) — semantic memory MCP server (C++ / Redis / Ollama)
-- [`hms-gmail`](https://github.com/hms-homelab/hms-gmail) — self-hosted Gmail backup and semantic search
+- redacted architecture documents
+- protocol and specification summaries
+- experimental implementation notes
+- reusable infrastructure and integration references
 
 ## Tags
 
-`homelab` · `home-automation` · `home-assistant` · `n8n` · `local-ai` · `HMS`
+- `homelab`
+- `experimental`
+- `protocols`
+- `open-standard`
+- `community`
+- `architecture`
+- `hms`
 
-## Status
+## Contact
 
-Under active development. Repos are split by domain so each subsystem can evolve
-independently while sharing common architecture ideas. HMS-4C is the production model;
-HMSP is the in-design protocol direction.
+Public contact: the homepage above and the published project docs. Email exposure can be added where you choose to publish it.
