@@ -1,5 +1,10 @@
 # HMS Homelab
 
+[![Homepage](https://img.shields.io/badge/Home%20Page-shmaestro.com-blue?logo=internet-explorer)](https://shmaestro.com)
+[![HMS-4C](https://img.shields.io/badge/Architecture-HMS--4C-blue)]()
+[![HMSP](https://img.shields.io/badge/Protocol-HMSP-blue)]()
+[![HMS-OSA](https://img.shields.io/badge/API-HMS--OSA-blue)]()
+
 Local-first home management systems, protocols, and services for a resilient residential automation stack.
 
 ## What This Org Is For
@@ -56,6 +61,16 @@ The long-term target is a plug-and-play homelab appliance that combines:
 - Voice assistance
 - Monitoring and alerting
 - Low-config setup
+
+## Tags
+
+- `homelab`
+- `home-automation`
+- `home-assistant`
+- `n8n`
+- `local-ai`
+- `protocols`
+- `HMS`
 
 ## Current Focus
 
